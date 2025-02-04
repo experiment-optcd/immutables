@@ -1,22 +1,21 @@
-name: CI
 
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
-      - topic/**
-
+name: Modified CI
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11', '17', '21'  ]
-        compiler: [ 'javac', 'ecj' ]
-        extra: [ 'none', 'errorprone' ]
+        java:
+        - '8'
+        - '11'
+        - '17'
+        - '21'
+        compiler:
+        - javac
+        - ecj
+        extra:
+        - none
+        - errorprone
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK
@@ -28,4 +27,9 @@ jobs:
     - name: print Java version
       run: java -version
     - name: Run tests
-      run: mvn --batch-mode --no-transfer-progress clean test -P${{ matrix.compiler }} -Dextra=${{ matrix.extra }}
+      run: mvn --batch-mode --no-transfer-progress clean test -P${{ matrix.compiler
+        }} -Dextra=${{ matrix.extra }}
+    name: build (${{ matrix.java }}, ${{ matrix.compiler }}, ${{ matrix.extra }})
+'on':
+- push
+- workflow_dispatch
